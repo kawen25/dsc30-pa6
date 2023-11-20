@@ -43,7 +43,32 @@ public class SearchEngine {
                 String rating = scanner.nextLine().trim();
                 scanner.nextLine();
 
-                /* TODO */
+                movieTree = new BSTree<String>();
+                studioTree = new BSTree<String>();
+                ratingTree = new BSTree<String>();
+
+                for (String castMember: cast) {
+                    castMember = castMember.toLowerCase();
+
+                    movieTree.insert(castMember);
+                    if (!movieTree.findDataList(castMember).contains(movie)) {
+                        movieTree.insertData(castMember, movie);
+                    }
+
+                    ratingTree.insert(castMember);
+                    if (!ratingTree.findDataList(castMember).contains(movie)) {
+                        movieTree.insertData(castMember, movie);
+                    }
+                }
+
+                for (String studioName : studios) {
+                    studioName = studioName.toLowerCase();
+
+                    studioTree.insert(studioName);
+                    if (!studioTree.findDataList(studioName).contains(movie)) {
+                        studioTree.insertData(studioName, movie);
+                    }
+                }
                 // populate three trees with the information you just read
                 // hint: create a helper function and reuse it to build all three trees
 
