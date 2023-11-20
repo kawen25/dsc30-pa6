@@ -43,10 +43,6 @@ public class SearchEngine {
                 String rating = scanner.nextLine().trim();
                 scanner.nextLine();
 
-                movieTree = new BSTree<String>();
-                studioTree = new BSTree<String>();
-                ratingTree = new BSTree<String>();
-
                 for (String castMember: cast) {
                     castMember = castMember.toLowerCase();
 
@@ -56,8 +52,8 @@ public class SearchEngine {
                     }
 
                     ratingTree.insert(castMember);
-                    if (!ratingTree.findDataList(castMember).contains(movie)) {
-                        movieTree.insertData(castMember, movie);
+                    if (!ratingTree.findDataList(castMember).contains(rating)) {
+                        movieTree.insertData(castMember, rating);
                     }
                 }
 
@@ -88,15 +84,24 @@ public class SearchEngine {
      */
     public static void searchMyQuery(BSTree<String> searchTree, String query) {
 
-        /* TODO */
+        LinkedList<String> documents;
         // process query
         String[] keys = query.toLowerCase().split(" ");
 
         // search and output intersection results
         // hint: list's addAll() and retainAll() methods could be helpful
+        if (keys.length == 1) {
+            for (String key: keys) {
+
+            }
+        }
 
         // search and output individual results
         // hint: list's addAll() and removeAll() methods could be helpful
+
+        if (keys.length == 1) {
+            documents = searchTree.findDataList(query);
+        }
 
     }
 
@@ -132,7 +137,7 @@ public class SearchEngine {
         int searchKind = Integer.parseInt(args[1]);
 
         // populate search trees
-
+        populateSearchTrees();
         // choose the right tree to query
 
     }
