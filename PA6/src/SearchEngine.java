@@ -1,6 +1,6 @@
 /*
- * Name: TODO
- * PID:  TODO
+ * Name: Kailey Wen and Mia Jerphagnon
+ * PID:  A16979798 and A16821297
  */
 
 import java.io.File;
@@ -12,8 +12,8 @@ import java.util.Scanner;
 /**
  * Search Engine implementation.
  * 
- * @author TODO
- * @since  TODO
+ * @author Kailey Wen and Mia Jerphagnon
+ * @since  November 19, 2023
  */
 public class SearchEngine {
 

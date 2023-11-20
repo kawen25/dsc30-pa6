@@ -340,24 +340,42 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
     /* * * * * BST Iterator * * * * */
 
     public class BSTree_Iterator implements Iterator<T> {
+        Stack<BSTNode> iterStack;
+        BSTNode currNode;
         public BSTree_Iterator() {
-            /* TODO */
+            iterStack = new Stack<BSTNode>();
+            currNode = getRoot();
+            iterStack.push(currNode);
+            // push nodes on the left path to stack
+            while (currNode.getLeft() != null) {
+                iterStack.push(currNode.getLeft());
+                currNode = currNode.getLeft();
+            }
+
         }
 
         public boolean hasNext() {
-            /* TODO */
-            return false;
+            return iterStack.isEmpty();
         }
 
         public T next() {
-            /* TODO */
-            return null;
+            BSTNode nextNode = iterStack.pop();
+            if (nextNode.getRight() != null) {
+                currNode = nextNode.getRight();
+                iterStack.push(currNode);
+            }
+            // push nodes of the left path of the right node to stack
+            while (currNode.getLeft() != null) {
+                iterStack.push(currNode.getLeft());
+                currNode = currNode.getLeft();
+            }
+            return nextNode.getKey();
         }
+
     }
 
     public Iterator<T> iterator() {
-        /* TODO */
-        return null;
+        return new BSTree_Iterator();
     }
 
     /* * * * * Extra Credit Methods * * * * */
@@ -368,7 +386,7 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
     }
 
     public T levelMax(int level) {
-        /* TODO */
+
         return null;
     }
 }
