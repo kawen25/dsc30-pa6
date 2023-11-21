@@ -172,9 +172,10 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
 
     /**
      * Insert a key into BST
-     * 
+     *
      * @param key
      * @return true if insertion is successful and false otherwise
+     * @throws NullPointerException if key is null
      */
     public boolean insert(T key) {
         if (key == null) {
@@ -183,22 +184,26 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
         if (findKey(key)) {
             return false;
         }
-        if (root == null) {
-            root = new BSTNode(null, null, key);
+        root = insertHelper(root, key);
+        nelems++;
+        return true;
+    }
+    //helper method for insert
+    private BSTNode insertHelper(BSTNode node, T key) {
+        if (node == null) {
+            return new BSTNode(null, null, key);
         }
-        Integer currKey = (Integer) root.getKey();
-        Integer paramKey = (Integer) key;
-        if (paramKey > currKey){
-            BSTree newTree = new BSTree();
-            newTree.root = root.right;
-            newTree.insert(key);
+        //compare key with current node
+        int compare = key.compareTo(node.getKey());
+        //if compare is negative, go to the left
+        if (compare < 0) {
+            node.setLeft(insertHelper(node.getLeft(), key));
         }
-        if (paramKey < currKey){
-            BSTree newTree = new BSTree();
-            newTree.root = root.left;
-            newTree.insert(key);
+        //if compare is positive, go to the right
+        else if (compare > 0) {
+            node.setRight(insertHelper(node.getRight(), key));
         }
-        return false;
+        return node;
     }
 
     /**
@@ -212,25 +217,22 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
         if (key == null) {
             throw new NullPointerException();
         }
-        if (root == null) {
+        return findKeyHelper(root, key);
+    }
+    private boolean findKeyHelper(BSTNode node, T key) {
+        if (node == null) {
             return false;
         }
-        Integer currKey = (Integer) root.getKey();
-        Integer paramKey = (Integer) key;
-        if (Objects.equals(currKey, paramKey)) {
+        int compare = key.compareTo(node.getKey());
+        if (compare == 0) {
             return true;
         }
-        if (paramKey > currKey){
-            BSTree newTree = new BSTree();
-            newTree.root = root.right;
-            newTree.findKey(key);
+        else if (compare < 0) {
+            return findKeyHelper(node.getLeft(), key);
         }
-        if (paramKey < currKey){
-            BSTree newTree = new BSTree();
-            newTree.root = root.left;
-            newTree.findKey(key);
+        else {
+            return findKeyHelper(node.getRight(), key);
         }
-        return false;
     }
 
     /**
@@ -251,20 +253,25 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
         if (!findKey(key)) {
             throw new IllegalArgumentException();
         }
-        Integer currKey = (Integer) root.getKey();
-        Integer paramKey = (Integer) key;
-        if (currKey == paramKey) {
-            root.addNewInfo(data);
-        }
-        if (paramKey > currKey){
-            BSTree newTree = new BSTree();
-            newTree.root = root.right;
-            newTree.insertData(key, data);
-        }
-        if (paramKey < currKey){
-            BSTree newTree = new BSTree();
-            newTree.root = root.left;
-            newTree.insertData(key, data);
+        insertDataHelper(root, key, data);
+    }
+    //insert data helper method
+    private void insertDataHelper(BSTNode node, T key, T data) {
+        //as long as the node isn't null, continue with the recursion
+        if (node != null) {
+            int compare = key.compareTo(node.getKey());
+            //if compare is zero, add the data to the LinkedList of the currnode
+            if (compare == 0) {
+                node.addNewInfo(data);
+            }
+            // if compare is negative, go to the left
+            else if (compare < 0) {
+                insertDataHelper(node.getLeft(), key, data);
+            }
+            //if compare is positive, go to the right
+            else {
+                insertDataHelper(node.getRight(), key, data);
+            }
         }
     }
 
@@ -283,20 +290,24 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
         if (!findKey(key)) {
             throw new IllegalArgumentException();
         }
-        Integer currKey = (Integer) root.getKey();
-        Integer paramKey = (Integer) key;
-        if (currKey == paramKey) {
-            return root.getDataList();
-        }
-        if (paramKey > currKey){
-            BSTree newTree = new BSTree();
-            newTree.root = root.right;
-            newTree.findDataList(key);
-        }
-        if (paramKey < currKey){
-            BSTree newTree = new BSTree();
-            newTree.root = root.left;
-            newTree.findDataList(key);
+        return findDataListHelper(root, key);
+    }
+    //findDataList helper method
+    private LinkedList<T> findDataListHelper(BSTNode node, T key) {
+        if (node != null) {
+            int compare = key.compareTo(node.getKey());
+            // if compare is zero, return the LinkedList of currnode
+            if (compare == 0) {
+                return node.getDataList();
+            }
+            // if compare is negative, go left
+            if (compare < 0) {
+                return findDataListHelper(node.getLeft(), key);
+            }
+            // if compare is positive, go right
+            else {
+                return findDataListHelper(node.getRight(), key);
+            }
         }
         return null;
     }
@@ -320,15 +331,19 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
      * @return The height of the tree, -1 if BST is empty
      */
     private int findHeightHelper(BSTNode root) {
+        //checks to see if the node is a leaf
         if (root.getLeft() == null && root.getRight() == null) {
             return 0;
         }
+        //checks to see if there is a right node, but not left
         else if (root.getLeft() == null && root.getRight() != null) {
             return 1 + findHeightHelper(root.getRight());
         }
+        //checks to see if there is a left node, but not right
         else if (root.getLeft() != null && root.getRight() == null) {
             return 1 + findHeightHelper(root.getLeft());
         }
+        //checks to see if there is a right node and left node
         else if (root.getLeft() != null && root.getRight() != null){
             int leftHeight = findHeightHelper(root.getLeft());
             int rightHeight = findHeightHelper(root.getRight());

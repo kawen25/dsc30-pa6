@@ -137,7 +137,7 @@ public class SearchEngine {
         int searchKind = Integer.parseInt(args[1]);
 
         // populate search trees
-        populateSearchTrees();
+        //populateSearchTrees();
         // choose the right tree to query
 
     }
