@@ -1,7 +1,9 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -164,5 +166,31 @@ class BSTreeTest {
         emptyTree.insert(7);
         emptyTree.insert(3);
         assertEquals(4, emptyTree.findHeight());
+    }
+    @Test
+    public void BSTree_IteratorTests() {
+        Iterator<Integer> iterEmpty = emptyTree.iterator();
+        assertFalse(iterEmpty.hasNext());
+
+        Iterator<Integer> iter = nonEmptyTree.iterator();
+        assertTrue(iter.hasNext());
+        assertEquals(Integer.valueOf(2), iter.next());
+        assertEquals(Integer.valueOf(3), iter.next());
+        assertEquals(Integer.valueOf(4), iter.next());
+        assertEquals(Integer.valueOf(5), iter.next());
+        assertEquals(Integer.valueOf(6), iter.next());
+        assertEquals(Integer.valueOf(7), iter.next());
+        assertEquals(Integer.valueOf(8), iter.next());
+        assertFalse(iter.hasNext());
+
+        myTree.insert(15);
+        Iterator<Integer> iterMy = myTree.iterator();
+        assertTrue(iterMy.hasNext());
+        assertEquals(Integer.valueOf(15), iterMy.next());
+        assertFalse(iterMy.hasNext());
+        assertThrows(NoSuchElementException.class, () -> {
+            iterEmpty.next();
+        });
+
     }
 }

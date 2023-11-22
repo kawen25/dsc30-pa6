@@ -53,7 +53,7 @@ public class SearchEngine {
 
                     ratingTree.insert(castMember);
                     if (!ratingTree.findDataList(castMember).contains(rating)) {
-                        movieTree.insertData(castMember, rating);
+                        ratingTree.insertData(castMember, rating);
                     }
                 }
 
@@ -91,18 +91,20 @@ public class SearchEngine {
         // search and output intersection results
         // hint: list's addAll() and retainAll() methods could be helpful
         if (keys.length == 1) {
-            for (String key: keys) {
-
-            }
+            documents = searchTree.findDataList(query);
+            print(query, documents);
         }
-
+        LinkedList<String> intersectionResults = new LinkedList<>(searchTree.findDataList(keys[0]));
+        for (int i = 1; i < keys.length; i++) {
+            intersectionResults.retainAll(searchTree.findDataList(keys[i]));
+        }
+        print(query, intersectionResults);
         // search and output individual results
         // hint: list's addAll() and removeAll() methods could be helpful
-
-        if (keys.length == 1) {
-            documents = searchTree.findDataList(query);
+        for (String key: keys) {
+            documents = searchTree.findDataList(key);
+            print(key, documents);
         }
-
     }
 
     /**
@@ -129,7 +131,10 @@ public class SearchEngine {
      */
     public static void main(String[] args) {
 
-        /* TODO */
+        BSTree<String> movieTree = new BSTree<>();
+        BSTree<String> studioTree = new BSTree<>();
+        BSTree<String> ratingTree = new BSTree<>();
+        BSTree<String>[] searchTrees = new BSTree[]{movieTree, studioTree, ratingTree};
         // initialize search trees
 
         // process command line arguments
@@ -137,8 +142,16 @@ public class SearchEngine {
         int searchKind = Integer.parseInt(args[1]);
 
         // populate search trees
+        populateSearchTrees(movieTree, studioTree, ratingTree, fileName);
         //populateSearchTrees();
         // choose the right tree to query
-
+        StringBuilder queryBuilder = new StringBuilder();
+        for (int i = 2; i < args.length; i++) {
+            queryBuilder.append(args[i]).append(" ");
+        }
+        String query = queryBuilder.toString().trim();
+        if (searchKind >= 0 && searchKind < searchTrees.length) {
+            searchMyQuery(searchTrees[searchKind], query);
+        }
     }
 }

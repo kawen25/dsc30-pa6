@@ -355,38 +355,45 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
     /* * * * * BST Iterator * * * * */
 
     public class BSTree_Iterator implements Iterator<T> {
-        Stack<BSTNode> iterStack;
-        BSTNode currNode;
+        private Stack<BSTNode> iterStack;
+        private BSTNode currNode;
         public BSTree_Iterator() {
             iterStack = new Stack<BSTNode>();
             currNode = getRoot();
-            iterStack.push(currNode);
             // push nodes on the left path to stack
-            while (currNode.getLeft() != null) {
-                iterStack.push(currNode.getLeft());
+            while (currNode != null) {
+                iterStack.push(currNode);
                 currNode = currNode.getLeft();
             }
-
         }
 
+
+
         public boolean hasNext() {
-            return iterStack.isEmpty();
+            return !(iterStack.isEmpty());
         }
 
         public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
             BSTNode nextNode = iterStack.pop();
-            if (nextNode.getRight() != null) {
-                currNode = nextNode.getRight();
-                iterStack.push(currNode);
+            if (nextNode != null) {
+                if (nextNode.getRight() != null) {
+                    currNode = nextNode.getRight();
+                    iterStack.push(currNode);
+                    // push nodes of the left path of the right node to stack
+                    while (currNode.getLeft() != null) {
+                        iterStack.push(currNode.getLeft());
+                        currNode = currNode.getLeft();
+                    }
+                }
+                return nextNode.getKey();
             }
-            // push nodes of the left path of the right node to stack
-            while (currNode.getLeft() != null) {
-                iterStack.push(currNode.getLeft());
-                currNode = currNode.getLeft();
+            else {
+                throw new NoSuchElementException();
             }
-            return nextNode.getKey();
         }
-
     }
 
     public Iterator<T> iterator() {
