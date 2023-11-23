@@ -173,7 +173,7 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
     /**
      * Insert a key into BST
      *
-     * @param key
+     * @param key key to be inserted
      * @return true if insertion is successful and false otherwise
      * @throws NullPointerException if key is null
      */
@@ -192,8 +192,8 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
     /**
      * Insert helper method
      *
-     * @param key
-     * @param node
+     * @param key target key
+     * @param node node at target key
      *
      */
     private BSTNode insertHelper(BSTNode node, T key) {
@@ -305,7 +305,11 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
         }
         return findDataListHelper(root, key);
     }
-    //findDataList helper method
+    /**
+     * findDataList Helper Method
+     * @param node node at target key
+     * @param key target key
+     */
     private LinkedList<T> findDataListHelper(BSTNode node, T key) {
         if (node != null) {
             int compare = key.compareTo(node.getKey());

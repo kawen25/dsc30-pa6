@@ -24,7 +24,7 @@ public class SearchEngine {
      * @param studioTree - BST to be populated with studios
      * @param ratingTree - BST to be populated with ratings
      * @param fileName   - name of the input file
-     * @returns false if file not found, true otherwise
+     * @return false if file not found, true otherwise
      */
     public static boolean populateSearchTrees(
             BSTree<String> movieTree, BSTree<String> studioTree,
