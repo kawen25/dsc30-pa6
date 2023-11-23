@@ -20,6 +20,10 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
 
     /* * * * * BST Node Inner Class * * * * */
 
+    /**
+     * A protected class for the inner binary search tree node which is implemented in
+     * binary search tree
+     */
     protected class BSTNode {
 
         T key;
@@ -194,7 +198,7 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
      *
      * @param key target key
      * @param node node at target key
-     *
+     * @return BSTNode of what to call in recursive function. next in path for insertion
      */
     private BSTNode insertHelper(BSTNode node, T key) {
         if (node == null) {
@@ -247,7 +251,7 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
      *
      * @param key  Target key
      * @param data To be added to key's LinkedList
-     * @throws NullPointerException     If eaither key or data is null
+     * @throws NullPointerException     If either key or data is null
      * @throws IllegalArgumentException If key is not found in the BST
      */
     public void insertData(T key, T data) {
@@ -265,7 +269,7 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
     /**
      * Insert data helper method
      *
-     * @param key, node's key
+     * @param key node's key
      * @param node node we are inserting data into
      * @param data data to be inserted
      */
@@ -425,6 +429,7 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
     }
     /**
      * Returns BST iterator
+     *
      * @return iterator
      */
     public Iterator<T> iterator() {
@@ -433,6 +438,12 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
 
     /* * * * * Extra Credit Methods * * * * */
 
+    /**
+     * Finds the data list at the intersection of two different iterators
+     * @param iter1 first iterator
+     * @param iter2 second iterator
+     * @return list of common data
+     */
     public ArrayList<T> intersection(Iterator<T> iter1, Iterator<T> iter2) {
         /* TODO */
         return null;
