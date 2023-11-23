@@ -189,6 +189,13 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
         return true;
     }
     //helper method for insert
+    /**
+     * Insert helper method
+     *
+     * @param key
+     * @param node
+     *
+     */
     private BSTNode insertHelper(BSTNode node, T key) {
         if (node == null) {
             return new BSTNode(null, null, key);
@@ -255,7 +262,13 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
         }
         insertDataHelper(root, key, data);
     }
-    //insert data helper method
+    /**
+     * Insert data helper method
+     *
+     * @param key, node's key
+     * @param node node we are inserting data into
+     * @param data data to be inserted
+     */
     private void insertDataHelper(BSTNode node, T key, T data) {
         //as long as the node isn't null, continue with the recursion
         if (node != null) {
@@ -353,10 +366,15 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
     }
 
     /* * * * * BST Iterator * * * * */
-
+    /**
+     * BST Iterator, to traverse the tree in-order
+     */
     public class BSTree_Iterator implements Iterator<T> {
         private Stack<BSTNode> iterStack;
         private BSTNode currNode;
+        /**
+         * Constructor for BST Iterator
+         */
         public BSTree_Iterator() {
             iterStack = new Stack<BSTNode>();
             currNode = getRoot();
@@ -367,12 +385,18 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
             }
         }
 
-
-
+        /**
+         * Checks to see if there are more elements in the BST
+         * @return boolean, true if there are more elements, false otherwise
+         */
         public boolean hasNext() {
             return !(iterStack.isEmpty());
         }
-
+        /**
+         * Retrieves the next element in the BST
+         * @return the next element in the BST
+         * @throws NoSuchElementException if there is no next element
+         */
         public T next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
@@ -395,7 +419,10 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
             }
         }
     }
-
+    /**
+     * Returns BST iterator
+     * @return iterator
+     */
     public Iterator<T> iterator() {
         return new BSTree_Iterator();
     }
