@@ -230,6 +230,14 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
         }
         return findKeyHelper(root, key);
     }
+
+    /**
+     * private helper method is used recursivey find key.
+     * @param node check for key at this node. recursive parameter so we can keep on checking
+     * new nodes
+     * @param key given key to find in tree
+     * @return true or false if key is found
+     */
     private boolean findKeyHelper(BSTNode node, T key) {
         if (node == null) {
             return false;
@@ -313,6 +321,7 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
      * findDataList Helper Method
      * @param node node at target key
      * @param key target key
+     * @return linked lsit with data
      */
     private LinkedList<T> findDataListHelper(BSTNode node, T key) {
         if (node != null) {
@@ -440,6 +449,7 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
 
     /**
      * Finds the data list at the intersection of two different iterators
+     *
      * @param iter1 first iterator
      * @param iter2 second iterator
      * @return list of common data
