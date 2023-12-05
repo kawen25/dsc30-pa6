@@ -447,20 +447,13 @@ public class BSTree<T extends Comparable<? super T>> implements Iterable {
 
     /* * * * * Extra Credit Methods * * * * */
 
-    /**
-     * Finds the data list at the intersection of two different iterators
-     *
-     * @param iter1 first iterator
-     * @param iter2 second iterator
-     * @return list of common data
-     */
-    public ArrayList<T> intersection(Iterator<T> iter1, Iterator<T> iter2) {
+    //public ArrayList<T> intersection(Iterator<T> iter1, Iterator<T> iter2) {
         /* TODO */
-        return null;
-    }
+        //return null;
+    //}
 
-    public T levelMax(int level) {
+    //public T levelMax(int level) {
 
-        return null;
-    }
+        //return null;
+    //}
 }

@@ -96,14 +96,18 @@ public class SearchEngine {
         }
         LinkedList<String> intersectionResults = new LinkedList<>(searchTree.findDataList(keys[0]));
         for (int i = 1; i < keys.length; i++) {
-            intersectionResults.retainAll(searchTree.findDataList(keys[i]));
+            LinkedList<String> newResults = new LinkedList<>(searchTree.findDataList(keys[i]));
+            newResults.removeAll(intersectionResults);
+            intersectionResults.addAll(newResults);
         }
         print(query, intersectionResults);
         // search and output individual results
         // hint: list's addAll() and removeAll() methods could be helpful
         for (String key: keys) {
             documents = searchTree.findDataList(key);
+            documents.removeAll(intersectionResults);
             print(key, documents);
+            intersectionResults.addAll(documents);
         }
     }
 
