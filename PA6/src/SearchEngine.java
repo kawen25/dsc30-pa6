@@ -94,7 +94,7 @@ public class SearchEngine {
                 LinkedList<String> documents = searchTree.findDataList(query);
                 print(query, documents);
             } catch (IllegalArgumentException e) {
-                print(query, null);
+                print(query, new LinkedList<>());
             }
         }
         else {
@@ -102,16 +102,22 @@ public class SearchEngine {
             LinkedList<String> firstKeyResults;
             try {
                 firstKeyResults = searchTree.findDataList(keys[0]);
-                if (firstKeyResults != null) {
-                    intersectionResults.addAll(firstKeyResults);
-                }
-            } catch (IllegalArgumentException e) {
-                firstKeyResults = new LinkedList<>();
+                intersectionResults.addAll(firstKeyResults);
+            }
+            catch (IllegalArgumentException e) {
+                intersectionResults = new LinkedList<>(); //basically nothing happens
             }
 
             for (int i = 1; i < keys.length; i++) {
-                LinkedList<String> newResults = new LinkedList<>(searchTree.findDataList(keys[i]));
-                intersectionResults.retainAll(newResults);
+                LinkedList<String> newResults;
+                try{
+                    newResults = searchTree.findDataList(keys[i]);
+                    intersectionResults.retainAll(newResults);
+                }
+                catch(IllegalArgumentException e) {
+                    continue;
+                }
+
             }
             print(query, intersectionResults);
             // search and output individual results
