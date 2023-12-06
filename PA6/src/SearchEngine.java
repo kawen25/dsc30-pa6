@@ -16,7 +16,7 @@ import java.util.Scanner;
  * @since  November 19, 2023
  */
 public class SearchEngine {
-
+    private static boolean isEntireQuery;
     /**
      * Populate BSTrees from a file
      * 
@@ -83,31 +83,56 @@ public class SearchEngine {
      * @param query      - query string
      */
     public static void searchMyQuery(BSTree<String> searchTree, String query) {
-
-        LinkedList<String> documents;
         // process query
         String[] keys = query.toLowerCase().split(" ");
+        isEntireQuery = true;
 
         // search and output intersection results
         // hint: list's addAll() and retainAll() methods could be helpful
         if (keys.length == 1) {
-            documents = searchTree.findDataList(query);
-            print(query, documents);
+            try {
+                LinkedList<String> documents = searchTree.findDataList(query);
+                print(query, documents);
+            } catch (IllegalArgumentException e) {
+                print(query, null);
+            }
         }
-        LinkedList<String> intersectionResults = new LinkedList<>(searchTree.findDataList(keys[0]));
-        for (int i = 1; i < keys.length; i++) {
-            LinkedList<String> newResults = new LinkedList<>(searchTree.findDataList(keys[i]));
-            newResults.removeAll(intersectionResults);
-            intersectionResults.addAll(newResults);
-        }
-        print(query, intersectionResults);
-        // search and output individual results
-        // hint: list's addAll() and removeAll() methods could be helpful
-        for (String key: keys) {
-            documents = searchTree.findDataList(key);
-            documents.removeAll(intersectionResults);
-            print(key, documents);
-            intersectionResults.addAll(documents);
+        else {
+            LinkedList<String> intersectionResults = new LinkedList<>();
+            LinkedList<String> firstKeyResults;
+            try {
+                firstKeyResults = searchTree.findDataList(keys[0]);
+                if (firstKeyResults != null) {
+                    intersectionResults.addAll(firstKeyResults);
+                }
+            } catch (IllegalArgumentException e) {
+                firstKeyResults = new LinkedList<>();
+            }
+
+            for (int i = 1; i < keys.length; i++) {
+                LinkedList<String> newResults = new LinkedList<>(searchTree.findDataList(keys[i]));
+                intersectionResults.retainAll(newResults);
+            }
+            print(query, intersectionResults);
+            // search and output individual results
+            // hint: list's addAll() and removeAll() methods could be helpful
+            isEntireQuery = false;
+            for (String key : keys) {
+                LinkedList<String> documents;
+                try{
+                    documents = searchTree.findDataList(key);
+                }
+                catch(IllegalArgumentException e){
+                    documents = new LinkedList<>();
+                }
+                // Check if there are no matches and no intersection results for the current key
+                if (!documents.isEmpty()) {
+                    // Remove overlapping results
+                    documents.removeAll(intersectionResults);
+                    print(key, documents);
+                    intersectionResults.addAll(documents);
+                }
+            }
         }
     }
 
@@ -118,13 +143,23 @@ public class SearchEngine {
      * @param documents Output of documents from query
      */
     public static void print(String query, LinkedList<String> documents) {
-        if (documents == null || documents.isEmpty())
-            System.out.println("The search yielded no results for " + query);
+        if (isEntireQuery) {
+            if (documents.isEmpty())
+                System.out.println("The search yielded no results for " + query);
+            else {
+                Object[] converted = documents.toArray();
+                Arrays.sort(converted);
+                System.out.println("Documents related to " + query
+                        + " are: " + Arrays.toString(converted));
+            }
+        }
         else {
-            Object[] converted = documents.toArray();
-            Arrays.sort(converted);
-            System.out.println("Documents related to " + query
-                    + " are: " + Arrays.toString(converted));
+            if (!documents.isEmpty()) {
+                Object[] converted = documents.toArray();
+                Arrays.sort(converted);
+                System.out.println("Documents related to " + query
+                        + " are: " + Arrays.toString(converted));
+            }
         }
     }
 
@@ -159,3 +194,4 @@ public class SearchEngine {
         }
     }
 }
+
