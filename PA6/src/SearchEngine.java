@@ -16,7 +16,6 @@ import java.util.Scanner;
  * @since  November 19, 2023
  */
 public class SearchEngine {
-    private static boolean resultsNotFound;
     /**
      * Populate BSTrees from a file
      * 
@@ -85,8 +84,6 @@ public class SearchEngine {
     public static void searchMyQuery(BSTree<String> searchTree, String query) {
         // process query
         String[] keys = query.toLowerCase().split(" ");
-        boolean resultsNotFound = true;
-
         // search and output intersection results
         LinkedList<String> intersectionResults = new LinkedList<>();
         LinkedList<String> firstKeyResults;
@@ -95,8 +92,8 @@ public class SearchEngine {
             try {
                 firstKeyResults = searchTree.findDataList(keys[0]);
                 intersectionResults.addAll(firstKeyResults);
-                resultsNotFound = false;
-            } catch (IllegalArgumentException e) {
+            }
+            catch (IllegalArgumentException e) {
                 // No results for the first key
             }
 
@@ -105,44 +102,39 @@ public class SearchEngine {
                 try {
                     newResults = searchTree.findDataList(keys[i]);
                     intersectionResults.retainAll(newResults);
-                    resultsNotFound = false;
                 } catch (IllegalArgumentException e) {
                     // No results for the current key
                 }
             }
 
             if (intersectionResults.isEmpty()) {
-                for (String key : keys) {
-                    System.out.println("The search yielded no results for " + key);
-                }
-            } else {
+                System.out.println("The search yielded no results for " + query);
+            }
+            else {
                 print(query, intersectionResults);
             }
-        }
 
-        // search and output individual results
-        for (String key : keys) {
-            LinkedList<String> documents;
-            try {
-                documents = searchTree.findDataList(key);
-            } catch (IllegalArgumentException e) {
-                documents = new LinkedList<>();
-            }
+            // search and output individual results
+            for (String key : keys) {
+                LinkedList<String> documents;
+                try {
+                    documents = searchTree.findDataList(key);
+                }
+                catch (IllegalArgumentException e) {
+                    documents = new LinkedList<>();
+                }
 
-            // Check if there are no matches and no intersection results for the current key
-            if (!documents.isEmpty()) {
-                // Remove overlapping results
-                documents.removeAll(intersectionResults);
+                // Check if there are no matches and no intersection results for the current key
                 if (!documents.isEmpty()) {
+                    System.out.println("The search yielded no results for " + key);
+                }
+                else {
+                    // Remove overlapping results
+                    documents.removeAll(intersectionResults);
                     print(key, documents);
                     intersectionResults.addAll(documents);
-                    resultsNotFound = false;
                 }
             }
-        }
-
-        if (resultsNotFound) {
-            System.out.println("The search yielded no results for " + query);
         }
     }
 
@@ -153,23 +145,15 @@ public class SearchEngine {
      * @param documents Output of documents from query
      */
     public static void print(String query, LinkedList<String> documents) {
-        if (resultsNotFound) {
-            if (documents.isEmpty())
-                System.out.println("The search yielded no results for " + query);
-            else {
-                Object[] converted = documents.toArray();
-                Arrays.sort(converted);
-                System.out.println("Documents related to " + query
-                        + " are: " + Arrays.toString(converted));
-            }
+
+        if (documents.isEmpty()) {
+            System.out.println("The search yielded no results for " + query);
         }
         else {
-            if (!documents.isEmpty()) {
-                Object[] converted = documents.toArray();
-                Arrays.sort(converted);
-                System.out.println("Documents related to " + query
-                        + " are: " + Arrays.toString(converted));
-            }
+            Object[] converted = documents.toArray();
+            Arrays.sort(converted);
+            System.out.println("Documents related to " + query
+                    + " are: " + Arrays.toString(converted));
         }
     }
 
