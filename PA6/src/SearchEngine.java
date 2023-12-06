@@ -16,7 +16,7 @@ import java.util.Scanner;
  * @since  November 19, 2023
  */
 public class SearchEngine {
-    private static boolean isEntireQuery;
+    private static boolean resultsNotFound;
     /**
      * Populate BSTrees from a file
      * 
@@ -85,7 +85,7 @@ public class SearchEngine {
     public static void searchMyQuery(BSTree<String> searchTree, String query) {
         // process query
         String[] keys = query.toLowerCase().split(" ");
-        isEntireQuery = true;
+        resultsNotFound = true;
 
         // search and output intersection results
         // hint: list's addAll() and retainAll() methods could be helpful
@@ -93,6 +93,7 @@ public class SearchEngine {
             try {
                 LinkedList<String> documents = searchTree.findDataList(query);
                 print(query, documents);
+                resultsNotFound = false;
             } catch (IllegalArgumentException e) {
                 print(query, new LinkedList<>());
             }
@@ -113,6 +114,7 @@ public class SearchEngine {
                 try{
                     newResults = searchTree.findDataList(keys[i]);
                     intersectionResults.retainAll(newResults);
+                    resultsNotFound = false;
                 }
                 catch(IllegalArgumentException e) {
                     continue;
@@ -122,7 +124,6 @@ public class SearchEngine {
             print(query, intersectionResults);
             // search and output individual results
             // hint: list's addAll() and removeAll() methods could be helpful
-            isEntireQuery = false;
             for (String key : keys) {
                 LinkedList<String> documents;
                 try{
@@ -135,8 +136,11 @@ public class SearchEngine {
                 if (!documents.isEmpty()) {
                     // Remove overlapping results
                     documents.removeAll(intersectionResults);
-                    print(key, documents);
-                    intersectionResults.addAll(documents);
+                    if (!documents.isEmpty()) {
+                        print(key, documents);
+                        intersectionResults.addAll(documents);
+                        resultsNotFound = false;
+                    }
                 }
             }
         }
@@ -149,7 +153,7 @@ public class SearchEngine {
      * @param documents Output of documents from query
      */
     public static void print(String query, LinkedList<String> documents) {
-        if (isEntireQuery) {
+        if (resultsNotFound) {
             if (documents.isEmpty())
                 System.out.println("The search yielded no results for " + query);
             else {
