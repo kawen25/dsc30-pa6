@@ -85,70 +85,70 @@ public class SearchEngine {
     public static void searchMyQuery(BSTree<String> searchTree, String query) {
         // process query
         String[] keys = query.toLowerCase().split(" ");
-        resultsNotFound = true;
+        boolean resultsNotFound = true;
 
         // search and output intersection results
-        // hint: list's addAll() and retainAll() methods could be helpful
-        if (keys.length == 1) {
-            try {
-                LinkedList<String> documents = searchTree.findDataList(query);
-                print(query, documents);
-                resultsNotFound = false;
-            } catch (IllegalArgumentException e) {
-                print(query, new LinkedList<>());
-            }
-        }
-        else {
-            LinkedList<String> intersectionResults = new LinkedList<>();
-            LinkedList<String> firstKeyResults;
+        LinkedList<String> intersectionResults = new LinkedList<>();
+        LinkedList<String> firstKeyResults;
+
+        if (keys.length > 0) {
             try {
                 firstKeyResults = searchTree.findDataList(keys[0]);
                 intersectionResults.addAll(firstKeyResults);
-            }
-            catch (IllegalArgumentException e) {
-                intersectionResults = new LinkedList<>(); //basically nothing happens
+                resultsNotFound = false;
+            } catch (IllegalArgumentException e) {
+                // No results for the first key
             }
 
             for (int i = 1; i < keys.length; i++) {
                 LinkedList<String> newResults;
-                try{
+                try {
                     newResults = searchTree.findDataList(keys[i]);
                     intersectionResults.retainAll(newResults);
                     resultsNotFound = false;
+                } catch (IllegalArgumentException e) {
+                    // No results for the current key
                 }
-                catch(IllegalArgumentException e) {
-                    continue;
-                }
+            }
 
+            if (intersectionResults.isEmpty()) {
+                for (String key : keys) {
+                    System.out.println("The search yielded no results for " + key);
+                }
+            } else {
+                print(query, intersectionResults);
             }
-            print(query, intersectionResults);
-            // search and output individual results
-            // hint: list's addAll() and removeAll() methods could be helpful
-            for (String key : keys) {
-                LinkedList<String> documents;
-                try{
-                    documents = searchTree.findDataList(key);
-                }
-                catch(IllegalArgumentException e){
-                    documents = new LinkedList<>();
-                }
-                // Check if there are no matches and no intersection results for the current key
+        }
+
+        // search and output individual results
+        for (String key : keys) {
+            LinkedList<String> documents;
+            try {
+                documents = searchTree.findDataList(key);
+            } catch (IllegalArgumentException e) {
+                documents = new LinkedList<>();
+            }
+
+            // Check if there are no matches and no intersection results for the current key
+            if (!documents.isEmpty()) {
+                // Remove overlapping results
+                documents.removeAll(intersectionResults);
                 if (!documents.isEmpty()) {
-                    // Remove overlapping results
-                    documents.removeAll(intersectionResults);
-                    if (!documents.isEmpty()) {
-                        print(key, documents);
-                        intersectionResults.addAll(documents);
-                        resultsNotFound = false;
-                    }
+                    print(key, documents);
+                    intersectionResults.addAll(documents);
+                    resultsNotFound = false;
                 }
             }
+        }
+
+        if (resultsNotFound) {
+            System.out.println("The search yielded no results for " + query);
         }
     }
 
     /**
      * Print output of query
-     * 
+     *
      * @param query     Query used to search tree
      * @param documents Output of documents from query
      */
@@ -172,6 +172,7 @@ public class SearchEngine {
             }
         }
     }
+
 
     /**
      * Main method that processes and query the given arguments
